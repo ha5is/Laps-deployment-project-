@@ -1,0 +1,41 @@
+Deployment Steps ⚙️
+1. Install LAPS
+
+Download and install the LAPS MSI on the Domain Controller and client machines.
+
+Install both Management Tools (for AD integration) and Client (on the workstation).
+
+2. Extend Active Directory Schema
+Import-Module AdmPwd.PS
+Update-AdmPwdADSchema
+
+3. Set Permissions
+
+Grant read/write access to authorized users:
+
+Set-AdmPwdComputerSelfPermission -OrgUnit "OU=Computers,DC=domain,DC=com"
+Set-AdmPwdReadPasswordPermission -OrgUnit "OU=Computers,DC=domain,DC=com" -AllowedPrincipals "IT Support"
+
+4. Configure Group Policy
+
+Open Group Policy Management.
+
+Create or edit a GPO targeting computers where LAPS is needed.
+
+Navigate to:
+Computer Configuration → Policies → Administrative Templates → LAPS
+Configure:
+
+Enable local admin password management
+
+Password Settings (length, complexity, expiration)
+
+Enable password expiration
+
+5. Verify Deployment
+Get-AdmPwdPassword -ComputerName "CLIENT01"
+
+
+This should return the current local administrator password for the target machine.
+
+
